@@ -44,6 +44,7 @@ jobs:
           mkdir -p release
           cp "target/${{ matrix.target }}/release/${{ matrix.executable }}" release/
           tar -C release -czf "release/${archive}" "${{ matrix.executable }}"
+          rm "release/${{ matrix.executable }}"
           shasum -a 256 "release/${archive}" > "release/${archive}.sha256"
           python scripts/package_extension.py --output "release/scenetrace-blender-${version}.zip"
           shasum -a 256 "release/scenetrace-blender-${version}.zip" > "release/scenetrace-blender-${version}.zip.sha256"
@@ -56,6 +57,7 @@ jobs:
           New-Item -ItemType Directory -Force release | Out-Null
           Copy-Item "target/${{ matrix.target }}/release/${{ matrix.executable }}" release/
           Compress-Archive -Path "release/${{ matrix.executable }}" -DestinationPath "release/$archive"
+          Remove-Item "release/${{ matrix.executable }}"
           (Get-FileHash "release/$archive" -Algorithm SHA256).Hash.ToLowerInvariant() + "  $archive" | Set-Content "release/$archive.sha256"
           python scripts/package_extension.py --output "release/scenetrace-blender-$version.zip"
           (Get-FileHash "release/scenetrace-blender-$version.zip" -Algorithm SHA256).Hash.ToLowerInvariant() + "  scenetrace-blender-$version.zip" | Set-Content "release/scenetrace-blender-$version.zip.sha256"
