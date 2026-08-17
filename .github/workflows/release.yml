@@ -1,0 +1,60 @@
+name: Release artifacts
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            executable: scenetrace
+            archive: scenetrace-1.0.0-x86_64-unknown-linux-gnu.tar.gz
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            executable: scenetrace.exe
+            archive: scenetrace-1.0.0-x86_64-pc-windows-msvc.zip
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            executable: scenetrace
+            archive: scenetrace-1.0.0-aarch64-apple-darwin.tar.gz
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Build release CLI
+        run: cargo build --release --target ${{ matrix.target }} -p scenetrace
+      - name: Package Unix archive and checksums
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          mkdir -p release
+          cp "target/${{ matrix.target }}/release/${{ matrix.executable }}" release/
+          tar -C release -czf "release/${{ matrix.archive }}" "${{ matrix.executable }}"
+          shasum -a 256 "release/${{ matrix.archive }}" > "release/${{ matrix.archive }}.sha256"
+          python scripts/package_extension.py --output release/scenetrace-blender-1.0.0.zip
+          shasum -a 256 release/scenetrace-blender-1.0.0.zip > release/scenetrace-blender-1.0.0.zip.sha256
+      - name: Package Windows archive and checksums
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force release | Out-Null
+          Copy-Item "target/${{ matrix.target }}/release/${{ matrix.executable }}" release/
+          Compress-Archive -Path "release/${{ matrix.executable }}" -DestinationPath "release/${{ matrix.archive }}"
+          (Get-FileHash "release/${{ matrix.archive }}" -Algorithm SHA256).Hash.ToLowerInvariant() + "  ${{ matrix.archive }}" | Set-Content "release/${{ matrix.archive }}.sha256"
+          python scripts/package_extension.py --output release/scenetrace-blender-1.0.0.zip
+          (Get-FileHash release/scenetrace-blender-1.0.0.zip -Algorithm SHA256).Hash.ToLowerInvariant() + "  scenetrace-blender-1.0.0.zip" | Set-Content release/scenetrace-blender-1.0.0.zip.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scenetrace-${{ matrix.target }}
+          path: release/

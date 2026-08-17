@@ -1,0 +1,19 @@
+# Rust build artifacts
+/target/
+
+# Generated release packages; attach these to GitHub Releases instead.
+/dist/
+
+# SceneTrace runtime metadata, logs, and local reports.
+**/.scenetrace/
+*.log
+
+# Python bytecode and test caches.
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Blender files are project assets, not SceneTrace source fixtures.
+*.blend
+*.blend1
+*.blend2

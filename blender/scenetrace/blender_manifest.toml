@@ -1,0 +1,12 @@
+schema_version = "1.0.0"
+id = "scenetrace"
+version = "1.0.0"
+name = "SceneTrace"
+tagline = "Performance regression testing for Blender scenes"
+maintainer = "SceneTrace contributors"
+type = "add-on"
+blender_version_min = "4.2.0"
+license = ["SPDX:MIT"]
+
+[permissions]
+files = "Save SceneTrace baselines and benchmark reports next to the current Blender project"

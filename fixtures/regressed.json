@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "measurement_mode": "depsgraph_frame_update_wall_time",
+  "samples": [
+    {"frame": 1, "ms": 20.0},
+    {"frame": 2, "ms": 21.5},
+    {"frame": 3, "ms": 48.0},
+    {"frame": 4, "ms": 46.0},
+    {"frame": 5, "ms": 21.0}
+  ],
+  "summary": {"median_ms": 21.5, "p95_ms": 47.6, "worst_ms": 48.0, "worst_frame": 3},
+  "scene_snapshot": {}
+}

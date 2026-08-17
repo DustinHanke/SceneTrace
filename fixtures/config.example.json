@@ -1,0 +1,26 @@
+{
+  "project": {
+    "include": ["**/*.blend"],
+    "exclude": ["archive/**", "**/backup/**"]
+  },
+  "frames": {
+    "start": 1,
+    "end": 100,
+    "step": 1
+  },
+  "benchmark": {
+    "warmups": 1,
+    "repetitions": 3,
+    "calibration_runs": 4,
+    "capture_modifier_timings": true
+  },
+  "budget": {
+    "regression_percent": 20,
+    "min_delta_ms": 2,
+    "target_fps": 30
+  },
+  "workers": {
+    "max_parallel": 2,
+    "timeout_seconds": 900
+  }
+}
