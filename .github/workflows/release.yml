@@ -43,8 +43,11 @@ jobs:
           archive="scenetrace-${version}-${{ matrix.target }}.${{ matrix.extension }}"
           mkdir -p release
           cp "target/${{ matrix.target }}/release/${{ matrix.executable }}" release/
-          tar -C release -czf "release/${archive}" "${{ matrix.executable }}"
+          cp blender/scenetrace/headless.py release/headless.py
+          tar -C release -czf "release/${archive}" "${{ matrix.executable }}" headless.py
+          tar -tf "release/${archive}" | grep -qx headless.py
           rm "release/${{ matrix.executable }}"
+          rm release/headless.py
           shasum -a 256 "release/${archive}" > "release/${archive}.sha256"
           python scripts/package_extension.py --output "release/scenetrace-blender-${version}.zip"
           shasum -a 256 "release/scenetrace-blender-${version}.zip" > "release/scenetrace-blender-${version}.zip.sha256"
@@ -56,8 +59,11 @@ jobs:
           $archive = "scenetrace-$version-${{ matrix.target }}.${{ matrix.extension }}"
           New-Item -ItemType Directory -Force release | Out-Null
           Copy-Item "target/${{ matrix.target }}/release/${{ matrix.executable }}" release/
-          Compress-Archive -Path "release/${{ matrix.executable }}" -DestinationPath "release/$archive"
+          Copy-Item blender/scenetrace/headless.py release/
+          Compress-Archive -Path "release/${{ matrix.executable }}", "release/headless.py" -DestinationPath "release/$archive"
+          if ((tar -tf "release/$archive") -notcontains "headless.py") { throw "Release archive is missing headless.py" }
           Remove-Item "release/${{ matrix.executable }}"
+          Remove-Item release/headless.py
           (Get-FileHash "release/$archive" -Algorithm SHA256).Hash.ToLowerInvariant() + "  $archive" | Set-Content "release/$archive.sha256"
           python scripts/package_extension.py --output "release/scenetrace-blender-$version.zip"
           (Get-FileHash "release/scenetrace-blender-$version.zip" -Algorithm SHA256).Hash.ToLowerInvariant() + "  scenetrace-blender-$version.zip" | Set-Content "release/scenetrace-blender-$version.zip.sha256"

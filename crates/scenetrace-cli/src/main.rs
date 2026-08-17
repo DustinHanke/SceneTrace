@@ -735,21 +735,27 @@ fn headless_script_path() -> Result<PathBuf> {
     }
 
     if let Ok(exe) = env::current_exe() {
-        if let Some(dir) = exe.parent() {
-            for path in [
-                dir.join("headless.py"),
-                dir.join("share").join("scenetrace").join("headless.py"),
-            ] {
-                if path.is_file() {
-                    return Ok(path);
-                }
-            }
+        if let Some(path) = installed_headless_script_path(&exe) {
+            return Ok(path);
         }
     }
 
     bail!(
         "SceneTrace headless runner was not found. Run from the source checkout or set SCENETRACE_HEADLESS_SCRIPT"
     )
+}
+
+fn installed_headless_script_path(executable: &Path) -> Option<PathBuf> {
+    let directory = executable.parent()?;
+    [
+        directory.join("headless.py"),
+        directory
+            .join("share")
+            .join("scenetrace")
+            .join("headless.py"),
+    ]
+    .into_iter()
+    .find(|path| path.is_file())
 }
 
 fn tail_file(path: &Path, lines: usize) -> String {
@@ -2352,6 +2358,21 @@ mod tests {
                 "test",
             ]
         );
+    }
+
+    #[test]
+    fn installed_cli_finds_its_bundled_headless_runner() {
+        let root = unique_temp_dir("bundled-headless-runner");
+        let bin = root.join("bin");
+        fs::create_dir_all(&bin).unwrap();
+        let runner = bin.join("headless.py");
+        fs::write(&runner, "# bundled runner").unwrap();
+
+        assert_eq!(
+            installed_headless_script_path(&bin.join("scenetrace.exe")),
+            Some(runner)
+        );
+        fs::remove_dir_all(root).unwrap();
     }
 
     #[test]

@@ -1,6 +1,6 @@
 schema_version = "1.0.0"
 id = "scenetrace"
-version = "1.0.0"
+version = "1.0.1"
 name = "SceneTrace"
 tagline = "Performance regression testing for Blender scenes"
 maintainer = "SceneTrace contributors"

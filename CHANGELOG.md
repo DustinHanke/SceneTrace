@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- Include the Blender headless runner in standalone CLI archives so released binaries work outside a source checkout.
+- Verify packaged archives contain both the CLI executable and `headless.py` before publishing.
+
 ## 1.0.0
 
 - Isolated headless Blender benchmarks with factory startup.

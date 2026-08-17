@@ -11,7 +11,7 @@ ADDON = ROOT / "blender" / "scenetrace"
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=ROOT / "dist" / "scenetrace-1.0.0.zip")
+    parser.add_argument("--output", type=Path, default=ROOT / "dist" / "scenetrace-1.0.1.zip")
     args = parser.parse_args()
     staging = ROOT / "dist" / "staging" / "scenetrace"
     if staging.parent.exists():
