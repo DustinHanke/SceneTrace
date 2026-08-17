@@ -58,7 +58,7 @@ def test_modifier_idproperty_input_is_still_recorded():
 def test_semantic_diff_detects_geometry_growth_and_removed_subdivision():
     baseline = {
         "objects": {
-            "head.004": {
+            "TestCharacterMesh": {
                 "type": "MESH",
                 "location": [0, 0, 0], "rotation_euler": [0, 0, 0], "scale": [1, 1, 1],
                 "hide_viewport": False, "hide_render": False,
@@ -71,7 +71,7 @@ def test_semantic_diff_detects_geometry_growth_and_removed_subdivision():
     }
     current = {
         "objects": {
-            "head.004": {
+            "TestCharacterMesh": {
                 "type": "MESH",
                 "location": [0, 0, 0], "rotation_euler": [0, 0, 0], "scale": [1, 1, 1],
                 "hide_viewport": False, "hide_render": False,
@@ -85,7 +85,7 @@ def test_semantic_diff_detects_geometry_growth_and_removed_subdivision():
     assert "possible_modifier_applied" in kinds
     assert "geometry" in kinds
     likely = next(c for c in changes if c["kind"] == "possible_modifier_applied")
-    assert likely["entity"] == "head.004"
+    assert likely["entity"] == "TestCharacterMesh"
     assert likely["modifier_type"] == "SUBSURF"
 
 

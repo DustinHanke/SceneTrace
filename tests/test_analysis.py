@@ -192,11 +192,11 @@ def test_diagnosis_exposes_compact_product_summary():
     base = make_run([(1, 1.5), (2, 1.5), (3, 1.5)], [])
     cur = make_run(
         [(1, 75.0), (2, 75.0), (3, 75.0)],
-        [{"object": "head.004", "modifier": "Subdivision", "type": "SUBSURF", "p95_ms": 70.0}],
+        [{"object": "TestCharacterMesh", "modifier": "Subdivision", "type": "SUBSURF", "p95_ms": 70.0}],
     )
     signals = analysis.compare_modifier_timings(base, cur, 20, 2)
     changes = [{
-        "entity": "head.004",
+        "entity": "TestCharacterMesh",
         "kind": "evaluated_geometry",
         "label": "Evaluated Vertices",
         "before": 65000,
@@ -207,7 +207,7 @@ def test_diagnosis_exposes_compact_product_summary():
     }]
     diagnosis = analysis.build_diagnosis(base, cur, changes, signals)
     summary = diagnosis["summary"]
-    assert summary["object"] == "head.004"
+    assert summary["object"] == "TestCharacterMesh"
     assert summary["modifier"] == "Subdivision"
     assert summary["geometry_before"] == 65000
     assert summary["geometry_after"] == 260000
@@ -218,7 +218,7 @@ def test_diagnosis_omits_transform_only_low_priority_noise():
     base = make_run([(1, 10), (2, 10), (3, 10)], [])
     cur = make_run([(1, 30), (2, 30), (3, 30)], [])
     changes = [{
-        "entity": "head.003",
+        "entity": "TestMesh",
         "kind": "object_property",
         "label": "Location",
         "before": [1.0, 2.0, 3.0],
@@ -272,11 +272,11 @@ def test_product_status_regression_promotes_likely_source():
     base = make_run([(1, 1.5), (2, 1.5), (3, 1.5)], [])
     cur = make_run(
         [(1, 75.0), (2, 75.0), (3, 75.0)],
-        [{"object": "head.004", "modifier": "Subdivision", "type": "SUBSURF", "p95_ms": 70.0}],
+        [{"object": "TestCharacterMesh", "modifier": "Subdivision", "type": "SUBSURF", "p95_ms": 70.0}],
     )
     comparison = analysis.compare_runs(base, cur, threshold_percent=20, min_delta_ms=2)
     changes = [{
-        "entity": "head.004",
+        "entity": "TestCharacterMesh",
         "kind": "evaluated_geometry",
         "label": "Evaluated Triangles",
         "before": 131796,
@@ -288,7 +288,7 @@ def test_product_status_regression_promotes_likely_source():
     comparison["diagnosis"] = analysis.build_diagnosis(base, cur, changes, comparison["modifier_timing_signals"])
     status = analysis.build_product_status(base, cur, comparison, 30)
     assert status["state"] == "regression"
-    assert status["primary"] == "Subdivision on head.004"
+    assert status["primary"] == "Subdivision on TestCharacterMesh"
     assert status["diagnosis"]["coverage_percent"] > 90
 
 
