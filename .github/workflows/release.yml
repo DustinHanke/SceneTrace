@@ -17,15 +17,15 @@ jobs:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             executable: scenetrace
-            archive: scenetrace-1.0.0-x86_64-unknown-linux-gnu.tar.gz
+            extension: tar.gz
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             executable: scenetrace.exe
-            archive: scenetrace-1.0.0-x86_64-pc-windows-msvc.zip
+            extension: zip
           - os: macos-latest
             target: aarch64-apple-darwin
             executable: scenetrace
-            archive: scenetrace-1.0.0-aarch64-apple-darwin.tar.gz
+            extension: tar.gz
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -38,23 +38,47 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash
         run: |
+          version="${GITHUB_REF_NAME#v}"
+          version="${version#.}"
+          archive="scenetrace-${version}-${{ matrix.target }}.${{ matrix.extension }}"
           mkdir -p release
           cp "target/${{ matrix.target }}/release/${{ matrix.executable }}" release/
-          tar -C release -czf "release/${{ matrix.archive }}" "${{ matrix.executable }}"
-          shasum -a 256 "release/${{ matrix.archive }}" > "release/${{ matrix.archive }}.sha256"
-          python scripts/package_extension.py --output release/scenetrace-blender-1.0.0.zip
-          shasum -a 256 release/scenetrace-blender-1.0.0.zip > release/scenetrace-blender-1.0.0.zip.sha256
+          tar -C release -czf "release/${archive}" "${{ matrix.executable }}"
+          shasum -a 256 "release/${archive}" > "release/${archive}.sha256"
+          python scripts/package_extension.py --output "release/scenetrace-blender-${version}.zip"
+          shasum -a 256 "release/scenetrace-blender-${version}.zip" > "release/scenetrace-blender-${version}.zip.sha256"
       - name: Package Windows archive and checksums
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
+          $version = $env:GITHUB_REF_NAME.TrimStart('v').TrimStart('.')
+          $archive = "scenetrace-$version-${{ matrix.target }}.${{ matrix.extension }}"
           New-Item -ItemType Directory -Force release | Out-Null
           Copy-Item "target/${{ matrix.target }}/release/${{ matrix.executable }}" release/
-          Compress-Archive -Path "release/${{ matrix.executable }}" -DestinationPath "release/${{ matrix.archive }}"
-          (Get-FileHash "release/${{ matrix.archive }}" -Algorithm SHA256).Hash.ToLowerInvariant() + "  ${{ matrix.archive }}" | Set-Content "release/${{ matrix.archive }}.sha256"
-          python scripts/package_extension.py --output release/scenetrace-blender-1.0.0.zip
-          (Get-FileHash release/scenetrace-blender-1.0.0.zip -Algorithm SHA256).Hash.ToLowerInvariant() + "  scenetrace-blender-1.0.0.zip" | Set-Content release/scenetrace-blender-1.0.0.zip.sha256
+          Compress-Archive -Path "release/${{ matrix.executable }}" -DestinationPath "release/$archive"
+          (Get-FileHash "release/$archive" -Algorithm SHA256).Hash.ToLowerInvariant() + "  $archive" | Set-Content "release/$archive.sha256"
+          python scripts/package_extension.py --output "release/scenetrace-blender-$version.zip"
+          (Get-FileHash "release/scenetrace-blender-$version.zip" -Algorithm SHA256).Hash.ToLowerInvariant() + "  scenetrace-blender-$version.zip" | Set-Content "release/scenetrace-blender-$version.zip.sha256"
       - uses: actions/upload-artifact@v4
         with:
           name: scenetrace-${{ matrix.target }}
           path: release/
+
+  publish:
+    name: Publish release assets
+    needs: package
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Collect platform artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: scenetrace-*
+          path: dist
+          merge-multiple: true
+      - name: Attach artifacts to the tagged GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
