@@ -1,4 +1,4 @@
-# SceneTrace 1.0
+# SceneTrace
 
 **Performance regression testing for Blender scenes and projects.**
 
