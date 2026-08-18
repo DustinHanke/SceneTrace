@@ -65,7 +65,7 @@ The asset directory suffix is derived from the project-relative path, so duplica
 
 ## Blender extension
 
-Install `scenetrace-blender-1.0.1.zip` using Blender 4.2+:
+Install `scenetrace-blender-1.0.2.zip` using Blender 4.2+:
 
 1. Edit → Preferences → Get Extensions.
 2. Open the menu and choose **Install from Disk**.
@@ -330,7 +330,7 @@ SceneTrace 1.0 hardens the established project runner into a reproducible CI too
 
 ### Installation and supported Blender
 
-Release archives provide Windows, Linux, and macOS CLI binaries plus SHA-256 checksums; Rust is only needed for source builds. Install `scenetrace-blender-1.0.1.zip` in Blender 4.2+ for the interactive extension. The supported headless CLI/CI version for 1.0 is Blender 4.4.
+Release archives provide Windows, Linux, and macOS CLI binaries plus SHA-256 checksums; Rust is only needed for source builds. Install `scenetrace-blender-1.0.2.zip` in Blender 4.2+ for the interactive extension. The supported headless CLI/CI version for 1.0 is Blender 4.4.
 
 ```powershell
 cargo build --release

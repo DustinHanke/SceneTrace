@@ -60,7 +60,7 @@ def save_baseline(baseline: dict) -> Path:
     if path is None:
         raise RuntimeError("Save the .blend file before creating a SceneTrace baseline")
     baseline.setdefault("schema_version", 1)
-    baseline.setdefault("scenetrace_version", "1.0.1")
+    baseline.setdefault("scenetrace_version", "1.0.2")
     baseline.setdefault("created_at", datetime.now(timezone.utc).isoformat())
     save_json(path, baseline)
     return path
@@ -74,7 +74,7 @@ def save_report(run: dict, comparison: dict | None = None, changes: list[dict] |
     payload = {
         "schema": "scenetrace-interactive-report",
         "schema_version": 1,
-        "scenetrace_version": "1.0.1",
+        "scenetrace_version": "1.0.2",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "run": run,
     }

@@ -34,7 +34,7 @@ from scenetrace.benchmark import run_benchmark
 from scenetrace.snapshot import diff_snapshots
 
 
-TOOL_VERSION = "1.0.1"
+TOOL_VERSION = "1.0.2"
 ARTIFACT_SCHEMA_VERSION = 1
 
 

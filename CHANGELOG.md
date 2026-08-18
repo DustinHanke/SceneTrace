@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+- License the Blender extension under GPL-3.0-or-later for Blender Extensions compatibility.
+- Add extension SPDX headers and a bundled GPL notice.
+- Package a Blender Extensions-compliant manifest with a valid files permission reason.
+
 ## 1.0.1
 
 - Include the Blender headless runner in standalone CLI archives so released binaries work outside a source checkout.
