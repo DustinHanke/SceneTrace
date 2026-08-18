@@ -6,7 +6,7 @@ tagline = "Performance regression testing for Blender scenes"
 maintainer = "SceneTrace contributors"
 type = "add-on"
 blender_version_min = "4.2.0"
-license = ["SPDX:MIT"]
+license = ["SPDX:GPL-3.0-or-later"]
 
 [permissions]
-files = "Save SceneTrace baselines and benchmark reports next to the current Blender project"
+files = "Save SceneTrace baselines and reports next to the .blend file"

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from .ui import CLASSES, register_properties, unregister_properties
 from .graph_overlay import remove_graph_handler
 

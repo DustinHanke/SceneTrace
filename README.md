@@ -80,6 +80,12 @@ Calibrate baseline → change scene → Re-test vs Baseline → inspect diagnosi
 
 Interactive and headless baselines remain intentionally separate because Blender's interactive and `--background` execution environments are not assumed to have identical timing characteristics.
 
+### Licensing and independence
+
+The `blender/scenetrace` extension is licensed under GPL-3.0-or-later. It is a self-contained Blender/Python extension: it uses Blender APIs and bundled Python modules, and does not require the SceneTrace Rust CLI to function.
+
+The Rust CLI and core crates remain independently MIT licensed. Installing the Blender extension does not install, invoke, or depend on a Rust binary.
+
 ## Rust CLI
 
 Build from the source checkout:
