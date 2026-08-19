@@ -1,27 +1,34 @@
 from __future__ import annotations
 
 import argparse
-import shutil
+import os
+import subprocess
 from pathlib import Path
-from zipfile import ZIP_DEFLATED, ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
 ADDON = ROOT / "blender" / "scenetrace"
 
 
-def main():
-    parser = argparse.ArgumentParser()
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Build the SceneTrace Blender extension")
+    parser.add_argument("--blender", default=os.environ.get("BLENDER_PATH", "blender"))
     parser.add_argument("--output", type=Path, default=ROOT / "dist" / "scenetrace-1.0.2.zip")
     args = parser.parse_args()
-    staging = ROOT / "dist" / "staging" / "scenetrace"
-    if staging.parent.exists():
-        shutil.rmtree(staging.parent)
-    shutil.copytree(ADDON, staging, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    with ZipFile(args.output, "w", ZIP_DEFLATED) as archive:
-        for path in staging.rglob("*"):
-            if path.is_file():
-                archive.write(path, path.relative_to(staging))
+    subprocess.run(
+        [
+            args.blender,
+            "--factory-startup",
+            "--command",
+            "extension",
+            "build",
+            "--source-dir",
+            str(ADDON),
+            "--output-filepath",
+            str(args.output),
+        ],
+        check=True,
+    )
     print(args.output)
 
 

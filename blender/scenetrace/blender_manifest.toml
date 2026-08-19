@@ -10,3 +10,11 @@ license = ["SPDX:GPL-3.0-or-later"]
 
 [permissions]
 files = "Save SceneTrace baselines and reports next to the .blend file"
+
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  ".*",
+  "*.zip",
+  "headless.py",
+]

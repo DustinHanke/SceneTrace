@@ -16,7 +16,6 @@ jobs:
       - run: python -m pip install pytest
       - run: pytest -q
       - run: python -m py_compile blender/scenetrace/*.py scripts/*.py
-      - run: python scripts/package_extension.py
       - run: cargo fmt --check
       - run: cargo clippy --all-targets --all-features -- -D warnings
       - run: cargo test
@@ -34,6 +33,13 @@ jobs:
           curl -L --fail --retry 3 https://download.blender.org/release/Blender4.4/blender-4.4.0-linux-x64.tar.xz -o .tooling/blender.tar.xz
           tar -xf .tooling/blender.tar.xz -C .tooling
           echo "BLENDER_PATH=$PWD/.tooling/blender-4.4.0-linux-x64/blender" >> "$GITHUB_ENV"
+      - name: Build extension package
+        run: |
+          "$BLENDER_PATH" --factory-startup --command extension build --source-dir blender/scenetrace --output-filepath "$RUNNER_TEMP/scenetrace-blender.zip"
+          if unzip -Z1 "$RUNNER_TEMP/scenetrace-blender.zip" | grep -Fxq headless.py; then
+            echo "Extension package must not include headless.py" >&2
+            exit 1
+          fi
       - name: Generate baseline scene
         run: |
           "$BLENDER_PATH" --factory-startup --background --python scripts/generate_demo.py -- "$RUNNER_TEMP/scenetrace-demo/demo.blend"
