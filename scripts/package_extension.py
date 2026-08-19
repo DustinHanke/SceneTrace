@@ -12,7 +12,7 @@ ADDON = ROOT / "blender" / "scenetrace"
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build the SceneTrace Blender extension")
     parser.add_argument("--blender", default=os.environ.get("BLENDER_PATH", "blender"))
-    parser.add_argument("--output", type=Path, default=ROOT / "dist" / "scenetrace-1.0.2.zip")
+    parser.add_argument("--output", type=Path, default=ROOT / "dist" / "scenetrace-1.0.3.zip")
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run(

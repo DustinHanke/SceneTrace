@@ -7,7 +7,7 @@ from collections import defaultdict
 from statistics import median
 
 
-TOOL_VERSION = "1.0.2"
+TOOL_VERSION = "1.0.3"
 
 
 def compute_graph_layout(

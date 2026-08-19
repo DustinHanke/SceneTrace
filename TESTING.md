@@ -179,7 +179,7 @@ Then inspect the generated Markdown file.
 
 ## 12. Blender extension regression check
 
-Install `scenetrace-blender-1.0.2.zip` and confirm the interactive workflow still works:
+Install `scenetrace-blender-1.0.3.zip` and confirm the interactive workflow still works:
 
 - calibrated interactive baseline;
 - stable unchanged run;

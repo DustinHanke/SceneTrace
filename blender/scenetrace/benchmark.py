@@ -133,7 +133,7 @@ def run_benchmark(
     modifier_timings = aggregate_modifier_repetitions(modifier_samples)
     return {
         "version": 7,
-        "tool_version": "1.0.2",
+        "tool_version": "1.0.3",
         "measurement_mode": "depsgraph_frame_update_wall_time",
         "captured_at": datetime.now(timezone.utc).isoformat(),
         "blend_file": bpy.data.filepath or "<unsaved>",

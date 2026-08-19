@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+- Build Blender extension packages with Blender's native tooling and exclude the standalone headless runner.
+
 ## 1.0.2
 
 - License the Blender extension under GPL-3.0-or-later for Blender Extensions compatibility.
